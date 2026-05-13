@@ -1,0 +1,25 @@
+
+.searchInput {
+  width: 80%;
+  height: 40px;
+  background: var(--surface2);
+   border: 1px solid var(--border);
+  color: var(--text);
+  padding: 0 12px 0 38px;
+  border-radius: var(--radius);
+  font-size: 14px;
+  font-family: var(--font-sans);
+   transition: border-color 0.15s, box-shadow 0.15s; 
+  /* Remove browser default search cancel button */
+  -webkit-appearance: none; 
+   appearance: none;  
+}
+
+.searchInput::placeholder {
+  color: var(--muted2);
+}
+.searchInput:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(0, 194, 255, 0.08);
+}
