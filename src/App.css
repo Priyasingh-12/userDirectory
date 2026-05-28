@@ -253,6 +253,7 @@ h1 {
   color: var(--accent) !important;
   background: rgba(0, 194, 255, 0.07) !important;
 }
+
 .resetBtn {
   display: inline-flex;
   align-items: center;
@@ -360,3 +361,9 @@ h1 {
   .sortBtn, .resetBtn { flex: 1; }
 }
 
+.userGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}

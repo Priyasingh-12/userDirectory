@@ -9,11 +9,10 @@
  
 //  * "2025-11-12T08:23:00Z" → "12 Nov 2025"
 
-export const formDate = (Date) => {
-    return new Date(Date).toLocaleDateString('en-IN',{
-       day: 'numeric',
-       month:'short'  ,
-       year:'numeric' ,
-    })
-}
-
+export const formatDate = (date) => {
+  return new Date(date).toLocaleDateString("en-IN", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+};

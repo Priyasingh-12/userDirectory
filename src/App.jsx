@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useMemo } from "react";
 import UserCard from "./component/userCard";
 import AddUser from "./component/AddUser";
+import useDebounce from "./hooks/useDebounce";
 
 import { FaSearch, FaUserFriends } from "react-icons/fa";
 import { Dot, Plus } from "lucide-react";
@@ -12,9 +13,11 @@ import "./App.css";
 const SORT = { AZ: "az", ZA: "za" };
 
 function App() {
-  const [search, setSearch] = useState("");
+  const [searchRaw, setSearchRaw] = useState("");
   const [sortOrder, setSortOrder] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const search = useDebounce(searchRaw, 500);
+
   const [users] = useState([
     {
       id: 1,
@@ -76,9 +79,11 @@ function App() {
   };
   // -------------------- reset logic filter ----------------------------
   const resetFilters = () => {
-    setSearch("");
+    setSearchRaw("");
     setSortOrder("");
   };
+  // =============== hide reset when no filter
+  const filteredIf = Boolean(search.trim() || sortOrder);
 
   return (
     <div className="main">
@@ -139,39 +144,47 @@ function App() {
             type="text"
             className="searchInput"
             placeholder="Search users by name…"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            value={searchRaw}
+            onChange={(e) => setSearchRaw(e.target.value)}
             aria-label="Search users by name"
           />
         </div>
 
         <button
-          className="sortBtn"
+          className={`sortBtn ${sortOrder === SORT.AZ ? "activeSort" : ""}`}
           onClick={() => toggleSort(SORT.AZ)}
           title="Sort A to Z"
         >
           A-Z
         </button>
         <button
-          className="sortBtn"
+          className={`sortBtn ${sortOrder === SORT.ZA ? "activeSort" : ""}`}
           onClick={() => toggleSort(SORT.ZA)}
           title="Sort Z to A"
         >
           Z-A
         </button>
         {/* ============================ reset button=============== */}
-
-        <button className="resetBtn" onClick={resetFilters}>
-          <RiResetRightFill size={14} aria-hidden="true" />
-          Reset
-        </button>
+        {filteredIf && (
+          <button className="resetBtn" onClick={resetFilters}>
+            <RiResetRightFill size={14} aria-hidden="true" />
+            Reset
+          </button>
+        )}
       </div>
       {/* ================ FILTER */}
       {sortedUsers.length === 0 && <p>No users found</p>}
 
-      {sortedUsers.map((user, index) => (
-        <UserCard key={user.id} user={user} isNew={user.isNew} index={index} />
-      ))}
+      <div className="userGrid">
+        {sortedUsers.map((user, index) => (
+          <UserCard
+            key={user.id}
+            user={user}
+            isNew={user.isNew}
+            index={index}
+          />
+        ))}
+      </div>
 
       {showModal && <AddUser closeModal={() => setShowModal(false)} />}
     </div>
