@@ -58,15 +58,12 @@
     transform: translateX(100%);
   }
 }
-
-
 .avatar {
   width: 52px;
   height: 52px;
   border-radius: 50%;
   flex-shrink: 0;
 }
-
 .line {
   height: 14px;
   border-radius: 6px;
