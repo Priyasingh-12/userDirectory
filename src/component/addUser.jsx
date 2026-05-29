@@ -147,7 +147,6 @@ useEffect(() => {
   </div>
 )}
 
-
         <FormField label="Full Name" id="field-name" error={fieldErrors.name}>
           <input
             id="field-name"
