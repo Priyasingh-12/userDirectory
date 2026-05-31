@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useEffect } from "react";
 import { useRef } from "react";
+import { validateUserForm } from '@/utils';
 
 import { X, MessageCircleWarning, Plus } from "lucide-react";
 import "./addUser.css";
@@ -24,7 +25,7 @@ function FormField({ label, id, error, children }) {
   );
 }
 
-//  ============ validation =============
+
 
 function AddUser({ closeModal }) {
   const firstInputRef = useRef(null);
@@ -56,27 +57,9 @@ function AddUser({ closeModal }) {
     }
      setServerError(null);
   };
-
-  const validateForm = () => {
-    let newErrors = {};
-
-    if (!fields.name.trim()) {
-      newErrors.name = "Name is required";
-    }
-
-    if (!fields.email.trim()) {
-      newErrors.email = "Email is required";
-    }
-
-    if (!fields.phone.trim()) {
-      newErrors.phone = "Phone is required";
-    }
-
-    return newErrors;
-  };
   // ==================  submit ===================
   const handleSubmit = () => {
-    const validateError = validateForm();
+    const validateError = validateUserForm();
 
     if (Object.keys(validateError).length > 0) {
       setFieldErrors(validateError);
