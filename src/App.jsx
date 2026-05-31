@@ -1,7 +1,8 @@
-import { useState } from "react";
-import { useMemo } from "react";
+import { useEffect, useState } from "react";
+import { useMemo, useCallback } from "react";
 import UserCard from "./component/userCard";
 import AddUser from "./component/AddUser";
+import SkeletonCard from "./component/SkeletonCard";
 import useDebounce from "./hooks/useDebounce";
 
 import { FaSearch, FaUserFriends } from "react-icons/fa";
@@ -11,14 +12,16 @@ import { RiResetRightFill } from "react-icons/ri";
 import "./App.css";
 
 const SORT = { AZ: "az", ZA: "za" };
+const SKELETON_COUNT = 9;
 
 function App() {
   const [searchRaw, setSearchRaw] = useState("");
   const [sortOrder, setSortOrder] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const search = useDebounce(searchRaw, 500);
+  const [loading, setLoading] = useState(true);
 
-  const [users] = useState([
+  const search = useDebounce(searchRaw, 500);
+  const [users, setUsers] = useState([
     {
       id: 1,
       name: "Priya",
@@ -74,16 +77,34 @@ function App() {
   }, [users, search, sortOrder]);
 
   // ===================
-  const toggleSort = (direction) => {
+  const toggleSort = useCallback((direction) => {
     setSortOrder((pre) => (pre === direction ? "" : direction));
-  };
+  }, []);
+
   // -------------------- reset logic filter ----------------------------
-  const resetFilters = () => {
+  const resetFilters = useCallback(() => {
     setSearchRaw("");
     setSortOrder("");
-  };
+  }, []);
   // =============== hide reset when no filter
   const filteredIf = Boolean(search.trim() || sortOrder);
+  // =============== loading==========
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+  }, []);
+  // ============== add user functionality =============
+  const addUser = (newUser) => {
+    setUsers((prev) => [
+      {
+        ...newUser,
+        id: Date.now(),
+        isNew: true,
+      },
+      ...prev,
+    ]);
+  };
 
   return (
     <div className="main">
@@ -110,7 +131,6 @@ function App() {
           aria-label="Add new user"
           onClick={() => setShowModal(!showModal)}
         >
-          {" "}
           <Plus color="#8619b8" />
           Add User
         </button>
@@ -172,21 +192,67 @@ function App() {
           </button>
         )}
       </div>
-      {/* ================ FILTER */}
-      {sortedUsers.length === 0 && <p>No users found</p>}
+      {/* ================ FILTER ================*/}
 
-      <div className="userGrid">
-        {sortedUsers.map((user, index) => (
-          <UserCard
-            key={user.id}
-            user={user}
-            isNew={user.isNew}
-            index={index}
-          />
-        ))}
-      </div>
+      {sortedUsers.length === 0 && (
+        <div className="emptyWrapper">
+          <div className="emptyState">
+            <div className="emptyIcon">🔍</div>
 
-      {showModal && <AddUser closeModal={() => setShowModal(false)} />}
+            <h2>No users found</h2>
+
+            <p>
+              {search.trim()
+                ? `No results match "${search}"`
+                : "No users available"}
+            </p>
+
+            {filteredIf && (
+              <button className="resetBtn" onClick={resetFilters}>
+                Clear Filters
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* ========================= usergrid ================== */}
+
+  <div className="userGrid">
+    {
+      loading 
+   ? Array.from( {length: SKELETON_COUNT},(_,index)=> (
+       <SkeletonCard key={index} />
+   )) : sortedUsers.map((user, index) => {
+     <UserCard
+          key={user.id}
+          user={user}
+          isNew={user.isNew}
+          index={index} />
+
+   })
+    }
+
+  </div>
+
+      {loading ? (
+        <p>Loading users...</p>
+      ) : (
+        <div className="userGrid">
+          {sortedUsers.map((user, index) => (
+            <UserCard
+              key={user.id}
+              user={user}
+              isNew={user.isNew}
+              index={index}
+            />
+          ))}
+        </div>
+      )}
+
+      {showModal && (
+        <AddUser closeModal={() => setShowModal(false)} addUser={addUser} />
+      )}
     </div>
   );
 }

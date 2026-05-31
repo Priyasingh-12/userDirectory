@@ -367,3 +367,68 @@ h1 {
   gap: 16px;
   margin-top: 20px;
 }
+
+.emptyWrapper {
+  min-height: 55vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.emptyState {
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+  background: white;
+  padding: 40px 30px;
+  border-radius: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  animation: fadeUp 0.4s ease;
+}
+
+.emptyIcon {
+  font-size: 60px;
+  margin-bottom: 16px;
+}
+
+.emptyState h2 {
+  font-size: 28px;
+  margin-bottom: 10px;
+  color: #1f2937;
+}
+
+.emptyState p {
+  color: #6b7280;
+  font-size: 15px;
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.emptyState .resetBtn {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 12px;
+  background: #8619b8;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.emptyState .resetBtn:hover {
+  transform: translateY(-2px);
+  opacity: 0.9;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
