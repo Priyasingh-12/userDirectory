@@ -1,7 +1,9 @@
-import { useState } from "react";
-import { useMemo } from "react";
+import { useEffect, useMemo, useCallback, useState } from "react";
+
 import UserCard from "./component/userCard";
 import AddUser from "./component/AddUser";
+import SkeletonCard from "./component/SkeletonCard";
+import useDebounce from "./hooks/useDebounce";
 
 import { FaSearch, FaUserFriends } from "react-icons/fa";
 import { Dot, Plus } from "lucide-react";
@@ -9,108 +11,149 @@ import { RiResetRightFill } from "react-icons/ri";
 
 import "./App.css";
 
-const SORT = { AZ: "az", ZA: "za" };
+const SORT = {
+  AZ: "az",
+  ZA: "za",
+};
 
 function App() {
-  const [search, setSearch] = useState("");
+  const [searchRaw, setSearchRaw] = useState("");
   const [sortOrder, setSortOrder] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const [users] = useState([
+  const [loading, setLoading] = useState(true);
+
+  const [users, setUsers] = useState([
     {
       id: 1,
       name: "Priya",
       email: "priya@gmail.com",
-      company: "Edovu vewnture's pvt ltd",
+      company: "Edovu venture's pvt ltd",
     },
     {
       id: 2,
       name: "Rahul",
       email: "rahul@gmail.com",
-      company: "cognizant",
+      company: "Cognizant",
     },
     {
       id: 3,
-      name: "piddi",
+      name: "Piddi",
       email: "rahul@gmail.com",
-      company: "volt",
+      company: "Volt",
     },
     {
       id: 4,
-      name: "vaibhav",
+      name: "Vaibhav",
       email: "rahul@gmail.com",
-      company: "seimen",
+      company: "Seimen",
     },
     {
       id: 5,
-      name: "kriti",
+      name: "Kriti",
       email: "rahul@gmail.com",
-      company: "samsung",
+      company: "Samsung",
     },
   ]);
 
-  // ====================== company count
+  // debounce search
+  const search = useDebounce(searchRaw, 400);
 
-  const uniqueCompanies = new Set(users.map((u) => u.company.toLowerCase()))
-    .size;
-  //  ========== add usememo optimization===========
+  // company count
+  const uniqueCompanies = new Set(
+    users.map((u) => u.company.toLowerCase()),
+  ).size;
 
+  // filtered + sorted users
   const sortedUsers = useMemo(() => {
-    // filter logic here  filter users
     let filtered = users.filter((user) =>
       user.name.toLowerCase().includes(search.toLowerCase()),
     );
-    //===================  SORTING ==================
+
     if (sortOrder === SORT.AZ) {
-      filtered = filtered.toSorted((a, b) => a.name.localeCompare(b.name));
+      filtered = filtered.toSorted((a, b) =>
+        a.name.localeCompare(b.name),
+      );
     }
 
     if (sortOrder === SORT.ZA) {
-      filtered = filtered.toSorted((a, b) => b.name.localeCompare(a.name));
+      filtered = filtered.toSorted((a, b) =>
+        b.name.localeCompare(a.name),
+      );
     }
+
     return filtered;
   }, [users, search, sortOrder]);
 
-  // ===================
-  const toggleSort = (direction) => {
-    setSortOrder((pre) => (pre === direction ? "" : direction));
-  };
-  // -------------------- reset logic filter ----------------------------
-  const resetFilters = () => {
-    setSearch("");
+  // sorting
+  const toggleSort = useCallback((direction) => {
+    setSortOrder((prev) => (prev === direction ? "" : direction));
+  }, []);
+
+  // reset filters
+  const resetFilters = useCallback(() => {
+    setSearchRaw("");
     setSortOrder("");
+  }, []);
+
+  // loading
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  // add user
+  const addUser = (newUser) => {
+    setUsers((prev) => [
+      {
+        ...newUser,
+        id: Date.now(),
+        isNew: true,
+      },
+      ...prev,
+    ]);
   };
+
+  // show reset button only if filters applied
+  const filteredIf = Boolean(searchRaw.trim() || sortOrder);
 
   return (
     <div className="main">
-      {/* ============= header ================= */}
+      {/* Header */}
       <header className="header">
-        <div className="header-left ">
+        <div className="header-left">
           <div className="logoRow">
             <div className="logoIcon" aria-hidden="true">
               <FaUserFriends size={25} />
             </div>
+
             <h1 className="title">User Directory</h1>
           </div>
+
           <p className="subTitle">Manage your team members</p>
+
           <div className="syncBadge" aria-live="polite">
             <span aria-hidden="true">
               <Dot color="#04810c" className="dot" />
             </span>
-            <span className="syncText"> users synced</span>
+
+            <span className="syncText">Users synced</span>
           </div>
         </div>
 
         <button
           className="addBtn"
           aria-label="Add new user"
-          onClick={() => setShowModal(!showModal)}
+          onClick={() => setShowModal(true)}
         >
-          {" "}
           <Plus color="#8619b8" />
           Add User
         </button>
       </header>
-      {/* ==============status ======== */}
+
+      {/* Stats */}
       <div className="stats">
         <div className="statPill">
           <span className="statNum">{users.length}</span>
@@ -123,24 +166,34 @@ function App() {
         </div>
 
         <div className="statPill">
-          <span className="statNum" style={{ color: "var(--accent)" }}>
+          <span
+            className="statNum"
+            style={{ color: "var(--accent)" }}
+          >
             {sortedUsers.length}
           </span>
-          <span className="statLabel">Shows</span>
+
+          <span className="statLabel">Shown</span>
         </div>
+
         <div className="sortTag">active</div>
       </div>
 
-      {/* ============================================== */}
+      {/* Toolbar */}
       <div className="toolbar" role="search">
         <div className="searchWrap">
-          <FaSearch size={16} className="searchIcon" aria-hidden="true" />
+          <FaSearch
+            size={16}
+            className="searchIcon"
+            aria-hidden="true"
+          />
+
           <input
             type="text"
             className="searchInput"
-            placeholder="Search users by name…"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search users by name..."
+            value={searchRaw}
+            onChange={(e) => setSearchRaw(e.target.value)}
             aria-label="Search users by name"
           />
         </div>
@@ -148,32 +201,52 @@ function App() {
         <button
           className="sortBtn"
           onClick={() => toggleSort(SORT.AZ)}
-          title="Sort A to Z"
         >
           A-Z
         </button>
+
         <button
           className="sortBtn"
           onClick={() => toggleSort(SORT.ZA)}
-          title="Sort Z to A"
         >
           Z-A
         </button>
-        {/* ============================ reset button=============== */}
 
-        <button className="resetBtn" onClick={resetFilters}>
-          <RiResetRightFill size={14} aria-hidden="true" />
-          Reset
-        </button>
+        {filteredIf && (
+          <button className="resetBtn" onClick={resetFilters}>
+            <RiResetRightFill size={14} aria-hidden="true" />
+            Reset
+          </button>
+        )}
       </div>
-      {/* ================ FILTER */}
-      {sortedUsers.length === 0 && <p>No users found</p>}
 
-      {sortedUsers.map((user, index) => (
-        <UserCard key={user.id} user={user} isNew={user.isNew} index={index} />
-      ))}
+      {/* Users */}
+      <div className="userGrid">
+        {loading
+          ? Array.from({ length: 6 }).map((_, index) => (
+              <SkeletonCard key={index} />
+            ))
+          : sortedUsers.map((user, index) => (
+              <UserCard
+                key={user.id}
+                user={user}
+                isNew={user.isNew}
+                index={index}
+              />
+            ))}
+      </div>
 
-      {showModal && <AddUser closeModal={() => setShowModal(false)} />}
+      {!loading && sortedUsers.length === 0 && (
+        <p>No users found</p>
+      )}
+
+      {/* Modal */}
+      {showModal && (
+        <AddUser
+          closeModal={() => setShowModal(false)}
+          addUser={addUser}
+        />
+      )}
     </div>
   );
 }
