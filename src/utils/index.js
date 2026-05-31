@@ -16,3 +16,30 @@ export const formatDate = (date) => {
     year: "numeric",
   });
 };
+export const validateUserForm = ({ name, email, phone, company }) => {
+  const errors = {};
+
+  if (!name?.trim()) {
+    errors.name = 'Name is required';
+  } else if (name.trim().length < 2) {
+    errors.name = 'Name must be at least 2 characters';
+  }
+
+  if (!email?.trim()) {
+    errors.email = 'Email is required';
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+    errors.email = 'Must be a valid email address';
+  }
+
+  if (!phone?.trim()) {
+    errors.phone = 'Phone number is required';
+  } else if (!/^\+?[\d\s\-().]{7,20}$/.test(phone)) {
+    errors.phone = 'Must be a valid phone number';
+  }
+
+  if (company && company.trim().length > 150) {
+    errors.company = 'Company name must not exceed 150 characters';
+  }
+
+  return errors;
+};

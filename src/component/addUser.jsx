@@ -25,8 +25,6 @@ function FormField({ label, id, error, children }) {
   );
 }
 
-//  ============ validation =============
-
 function AddUser({ closeModal }) {
   const firstInputRef = useRef(null);
 
@@ -67,7 +65,6 @@ function AddUser({ closeModal }) {
     }
     alert("User Created Successfully");
 
-    // ============
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
@@ -89,6 +86,7 @@ function AddUser({ closeModal }) {
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, [closeModal]);
+
   // ================== prevent background scroll =============
 useEffect(() => {
   document.body.style.overflow = "hidden";
@@ -97,6 +95,7 @@ useEffect(() => {
     document.body.style.overflow = "";
   };
 }, []);
+
 // ================== 
 
   const handleOverlayClick = (e) => {
