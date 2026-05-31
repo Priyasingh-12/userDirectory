@@ -1,6 +1,4 @@
-import { useState } from "react";
-import { useEffect } from "react";
-import { useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { validateUserForm } from '@/utils';
 
 import { X, MessageCircleWarning, Plus } from "lucide-react";
@@ -24,8 +22,6 @@ function FormField({ label, id, error, children }) {
     </div>
   );
 }
-
-
 
 function AddUser({ closeModal }) {
   const firstInputRef = useRef(null);
