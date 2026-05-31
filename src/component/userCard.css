@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 .card {
-=======
-/* .card {
->>>>>>> priya
   position: relative;
   background: var(--surface);
   border: 1px solid var(--border);
@@ -12,7 +8,6 @@
   transition: border-color 0.15s ease, transform 0.15s ease;
   animation: fadeUp 0.35s ease both;
 }
-
 .card::before {
   content: '';
   position: absolute;
@@ -169,10 +164,8 @@
   font-size: 11px;
   color: var(--muted2);
   font-family: var(--font-mono);
-<<<<<<< HEAD
-}
-=======
-} */
+
+} 
 
 
 /* ============================================ */
@@ -395,4 +388,3 @@
 
   font-family: var(--font-mono);
 }
->>>>>>> priya

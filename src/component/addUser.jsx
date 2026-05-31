@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { validateUserForm } from '@/utils';
+import { validateUserForm } from  "../utils";
 
 import { X, MessageCircleWarning, Plus } from "lucide-react";
 import "./addUser.css";

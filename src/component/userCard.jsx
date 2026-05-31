@@ -1,5 +1,5 @@
 import { Building2, Clock, Phone, Mail } from "lucide-react";
-import { initialWord, formatDate } from "@/utils";
+import { initialWord, formatDate } from "../utils";
 
 import "./userCard.css";
 
