@@ -7,6 +7,17 @@
   overflow: hidden;
   transition: border-color 0.15s ease, transform 0.15s ease;
   animation: fadeUp 0.35s ease both;
+    height: 320px;
+    width: 100%;
+  display: flex;
+    flex: 1 1 340px; 
+  flex-direction: column;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent);
+  box-shadow: 0 10px 30px rgba(0, 194, 255, 0.12);
 }
 .card::before {
   content: '';
@@ -20,195 +31,9 @@
   transition: opacity 0.2s ease;
 }
 
-.card:hover {
-  border-color: var(--border2);
-  transform: translateY(-2px);
-}
-
 .card:hover::before {
   opacity: 0.7;
 }
-
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(14px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-.newBadge {
-  position: absolute;
-  top: 14px;
-  right: 14px;
-  background: rgba(0, 214, 143, 0.12);
-  border: 1px solid rgba(0, 214, 143, 0.3);
-  color: var(--success);
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  padding: 2px 8px;
-  border-radius: 20px;
-}
-
-.header {
-  display: flex;
-  align-items: flex-start;
-  gap: 14px;
-  margin-bottom: 16px;
-}
-
-.avatar {
-  width: 44px;
-  height: 44px;
-  border-radius: 10px;
-  background: var(--surface2);
-  border: 1px solid var(--border2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--accent);
-  letter-spacing: -0.5px;
-  flex-shrink: 0;
-  font-family: var(--font-mono);
-}
-
-.headerMeta {
-  flex: 1;
-  min-width: 0;
-}
-
-.name {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--text);
-  line-height: 1.2;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin: 0;
-}
-
-.company {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 12px;
-  color: var(--muted);
-  margin-top: 4px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.company svg {
-  flex-shrink: 0;
-  opacity: 0.6;
-}
-
-.divider {
-  height: 1px;
-  background: var(--border);
-  margin-bottom: 14px;
-}
-
-.fields {
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-}
-
-.field {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 6px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-}
-
-.field:last-child {
-  border-bottom: none;
-}
-
-.fieldIcon {
-  width: 28px;
-  height: 28px;
-  border-radius: 7px;
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  color: var(--muted);
-}
-
-.fieldValue {
-  font-size: 12.5px;
-  color: var(--muted);
-  font-family: var(--font-mono);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  margin: 0;
-}
-
-.meta {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  margin-top: 14px;
-  padding-top: 10px;
-  border-top: 1px solid var(--border);
-  font-size: 11px;
-  color: var(--muted2);
-  font-family: var(--font-mono);
-
-} 
-
-
-/* ============================================ */
-.card {
-  position: relative;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 20px;
-  overflow: hidden;
-
-  transition: border-color 0.15s ease, transform 0.15s ease;
-  animation: fadeUp 0.35s ease both;
-
-  /* FIXES */
-   height: 320px;
-  width: 100%;
-
-  display: flex;
-  flex-direction: column;
-}
-
-.card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, var(--accent), transparent 70%);
-  opacity: 0;
-  transition: opacity 0.2s ease;
-}
-
-.card:hover {
-  border-color: var(--border2);
-  transform: translateY(-2px);
-}
-
-.card:hover::before {
-  opacity: 0.7;
-}
-
 @keyframes fadeUp {
   from {
     opacity: 0;
@@ -220,92 +45,70 @@
     transform: translateY(0);
   }
 }
-
 .newBadge {
   position: absolute;
   top: 14px;
   right: 14px;
-
   background: rgba(0, 214, 143, 0.12);
   border: 1px solid rgba(0, 214, 143, 0.3);
-
   color: var(--success);
-
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.5px;
   text-transform: uppercase;
-
   padding: 2px 8px;
   border-radius: 20px;
 }
-
 .header {
   display: flex;
   align-items: flex-start;
   gap: 14px;
-
   margin-bottom: 16px;
 }
-
 .avatar {
   width: 44px;
   height: 44px;
-
   border-radius: 10px;
-
   background: var(--surface2);
   border: 1px solid var(--border2);
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   font-size: 14px;
   font-weight: 600;
   color: var(--accent);
-
   letter-spacing: -0.5px;
-
   flex-shrink: 0;
-
   font-family: var(--font-mono);
 }
-
+  
 .headerMeta {
   flex: 1;
   min-width: 0;
 }
 
 .name {
-  margin: 0;
-
   font-size: 15px;
   font-weight: 600;
   color: var(--text);
-
   line-height: 1.2;
-
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  margin: 0;
 }
 
 .company {
   display: flex;
   align-items: center;
   gap: 5px;
-
-  margin-top: 4px;
-
   font-size: 12px;
   color: var(--muted);
-
+  margin-top: 4px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
 .company svg {
   flex-shrink: 0;
   opacity: 0.6;
@@ -314,24 +117,19 @@
 .divider {
   height: 1px;
   background: var(--border);
-
   margin-bottom: 14px;
 }
-
 .fields {
   margin: 0;
-
   display: flex;
   flex-direction: column;
+  gap: 0;
 }
-
 .field {
   display: flex;
   align-items: center;
   gap: 10px;
-
   padding: 6px 0;
-
   border-bottom: 1px solid rgba(255, 255, 255, 0.03);
 }
 
@@ -342,49 +140,33 @@
 .fieldIcon {
   width: 28px;
   height: 28px;
-
   border-radius: 7px;
-
   background: var(--surface2);
   border: 1px solid var(--border);
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   flex-shrink: 0;
-
   color: var(--muted);
 }
-
 .fieldValue {
-  flex: 1;
-
-  margin: 0;
-
   font-size: 12.5px;
   color: var(--muted);
-
   font-family: var(--font-mono);
-
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  margin: 0;
 }
-
 .meta {
   display: flex;
   align-items: center;
   gap: 5px;
-
-  margin-top: auto;
-
+    margin-top: auto;
   padding-top: 10px;
-
   border-top: 1px solid var(--border);
-
   font-size: 11px;
   color: var(--muted2);
-
   font-family: var(--font-mono);
-}
+
+} 

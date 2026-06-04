@@ -27,31 +27,41 @@ function App() {
       id: 1,
       name: "Priya",
       email: "priya@gmail.com",
+        phone: "8982044720",
       company: "Edovu venture's pvt ltd",
+       createdAt: Date.now(),
     },
     {
       id: 2,
       name: "Rahul",
       email: "rahul@gmail.com",
+        phone: "9876543210",
       company: "Cognizant",
+       createdAt: Date.now(),
     },
     {
       id: 3,
       name: "Piddi",
       email: "rahul@gmail.com",
+        phone: "9981522852",
       company: "Volt",
+       createdAt: Date.now(),
     },
     {
       id: 4,
       name: "Vaibhav",
       email: "rahul@gmail.com",
+        phone: "9876765973",
       company: "Seimen",
+       createdAt: Date.now(),
     },
     {
       id: 5,
       name: "Kriti",
       email: "rahul@gmail.com",
+        phone: "6260194827",
       company: "Samsung",
+       createdAt: Date.now(),
     },
   ]);
 
@@ -105,16 +115,18 @@ function App() {
   }, []);
 
   // add user
-  const addUser = (newUser) => {
-    setUsers((prev) => [
-      {
-        ...newUser,
-        id: Date.now(),
-        isNew: true,
-      },
-      ...prev,
-    ]);
-  };
+        // add user
+const addUser = (newUser) => {
+  setUsers((prev) => [
+    {
+      ...newUser,
+      id: Date.now(),
+      createdAt: Date.now(),
+      isNew: true,
+    },
+    ...prev,
+  ]);
+};
 
   // show reset button only if filters applied
   const filteredIf = Boolean(searchRaw.trim() || sortOrder);
@@ -221,7 +233,7 @@ function App() {
       </div>
 
       {/* Users */}
-      <div className="userGrid">
+      <div className="grid">
         {loading
           ? Array.from({ length: 6 }).map((_, index) => (
               <SkeletonCard key={index} />
