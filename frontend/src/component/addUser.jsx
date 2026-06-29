@@ -1,7 +1,9 @@
 import { useState, useEffect, useRef } from "react";
-import { validateUserForm } from '@/utils';
-
+import { validateUserForm } from  "../utils";
 import { X, MessageCircleWarning, Plus } from "lucide-react";
+import { createUser } from "../api/userApi";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./addUser.css";
 
 function FormField({ label, id, error, children }) {
@@ -23,7 +25,7 @@ function FormField({ label, id, error, children }) {
   );
 }
 
-function AddUser({ closeModal }) {
+function AddUser({ closeModal, addUser }) {
   const firstInputRef = useRef(null);
 
   const [fields, setFields] = useState({
@@ -54,22 +56,50 @@ function AddUser({ closeModal }) {
      setServerError(null);
   };
   // ==================  submit ===================
-  const handleSubmit = () => {
-    const validateError =  validateUserForm();
+const handleSubmit = async () => {
+  // Validate form
+  const validateError = validateUserForm(fields);
 
-    if (Object.keys(validateError).length > 0) {
-      setFieldErrors(validateError);
-      return;
-    }
-    alert("User Created Successfully");
+  if (Object.keys(validateError).length > 0) {
+    setFieldErrors(validateError);
+    return;
+  }
 
+  try {
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      alert("User Created");
-    }, 2000);
-  };
+    setServerError("");
 
+    // Call Backend API
+    const response = await createUser(fields);
+
+    // Update UI immediately
+    addUser(response.data);
+
+    // Reset form
+    setFields({
+      name: "",
+      email: "",
+      phone: "",
+      company: "",
+    });
+
+    // Success Toast
+    toast.success("User created successfully!");
+
+    // Close modal
+    closeModal();
+  } catch (error) {
+    const message =
+      error.response?.data?.message || "Something went wrong";
+
+    setServerError(message);
+
+    // Error Toast
+    toast.error(message);
+  } finally {
+    setLoading(false);
+  }
+};
   //========================== escape key ===================
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -241,8 +271,20 @@ useEffect(() => {
           </button>
         </div>
       </div>
+      <ToastContainer
+  position="top-right"
+  autoClose={3000}
+  hideProgressBar={false}
+  newestOnTop
+  closeOnClick
+  pauseOnHover
+  draggable
+  theme="colored"
+/>
     </div>
   );
 }
 
 export default AddUser;
+
+

@@ -8,6 +8,7 @@ import useDebounce from "./hooks/useDebounce";
 import { FaSearch, FaUserFriends } from "react-icons/fa";
 import { Dot, Plus } from "lucide-react";
 import { RiResetRightFill } from "react-icons/ri";
+import { getUsers } from "./api/userApi";
 
 import "./App.css";
 
@@ -22,69 +23,41 @@ function App() {
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  const [users, setUsers] = useState([
-    {
-      id: 1,
-      name: "Priya",
-      email: "priya@gmail.com",
-      company: "Edovu venture's pvt ltd",
-    },
-    {
-      id: 2,
-      name: "Rahul",
-      email: "rahul@gmail.com",
-      company: "Cognizant",
-    },
-    {
-      id: 3,
-      name: "Piddi",
-      email: "rahul@gmail.com",
-      company: "Volt",
-    },
-    {
-      id: 4,
-      name: "Vaibhav",
-      email: "rahul@gmail.com",
-      company: "Seimen",
-    },
-    {
-      id: 5,
-      name: "Kriti",
-      email: "rahul@gmail.com",
-      company: "Samsung",
-    },
-  ]);
-
+  const [users, setUsers] = useState([]);
+  
   // debounce search
   const search = useDebounce(searchRaw, 400);
 
   // company count
-  const uniqueCompanies = new Set(
-    users.map((u) => u.company.toLowerCase()),
+const uniqueCompanies = useMemo(() => {
+  return new Set(
+    users.map((u) => u.company?.toLowerCase() || "unknown")
   ).size;
+}, [users]);
 
   // filtered + sorted users
+
   const sortedUsers = useMemo(() => {
-    let filtered = users.filter((user) =>
-      user.name.toLowerCase().includes(search.toLowerCase()),
+  let filtered = users.filter((user) =>
+    user.name?.toLowerCase().includes(search.toLowerCase())
+  );
+
+  if (sortOrder === SORT.AZ) {
+      filtered = [...filtered].sort((a, b) =>
+      (a.name || "").localeCompare(b.name || "")
     );
+  }
 
-    if (sortOrder === SORT.AZ) {
-      filtered = filtered.toSorted((a, b) =>
-        a.name.localeCompare(b.name),
-      );
-    }
+  if (sortOrder === SORT.ZA) {
+    filtered = [...filtered].sort((a, b) =>
+      (b.name || "").localeCompare(a.name || "")
+    );
+  }
 
-    if (sortOrder === SORT.ZA) {
-      filtered = filtered.toSorted((a, b) =>
-        b.name.localeCompare(a.name),
-      );
-    }
+  return filtered;
+}, [users, search, sortOrder]);
 
-    return filtered;
-  }, [users, search, sortOrder]);
-
-  // sorting
+ // sorting
   const toggleSort = useCallback((direction) => {
     setSortOrder((prev) => (prev === direction ? "" : direction));
   }, []);
@@ -95,26 +68,41 @@ function App() {
     setSortOrder("");
   }, []);
 
-  // loading
-  useEffect(() => {
-    const timer = setTimeout(() => {
+
+  //=====================  get data api =====
+useEffect(() => {
+  const fetchUsers = async () => {
+    try {
+      setLoading(true);
+
+      const response = await getUsers();
+
+      console.log(response.data); // Check the API response
+
+      setUsers(response.data);
+
+    } catch (error) {
+      console.error(error);
+    } finally {
       setLoading(false);
-    }, 2000);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  // add user
-  const addUser = (newUser) => {
-    setUsers((prev) => [
-      {
-        ...newUser,
-        id: Date.now(),
-        isNew: true,
-      },
-      ...prev,
-    ]);
+    }
   };
+
+  fetchUsers();
+}, []);
+  // add user
+        // add user
+const addUser = (newUser) => {
+  setUsers((prev) => [
+    {
+      ...newUser,
+      // id: Date.now(),
+      // createdAt: Date.now(),
+      isNew: true,
+    },
+    ...prev,
+  ]);
+};
 
   // show reset button only if filters applied
   const filteredIf = Boolean(searchRaw.trim() || sortOrder);
@@ -221,7 +209,7 @@ function App() {
       </div>
 
       {/* Users */}
-      <div className="userGrid">
+      <div className="grid">
         {loading
           ? Array.from({ length: 6 }).map((_, index) => (
               <SkeletonCard key={index} />
